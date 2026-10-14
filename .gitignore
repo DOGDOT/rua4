@@ -1,0 +1,17 @@
+# Python build artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+
+# ROS build artifacts (if accidentally run inside)
+build/
+install/
+log/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*~

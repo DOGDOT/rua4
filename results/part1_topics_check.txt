@@ -1,0 +1,27 @@
+=================================================================
+   [rua4] KIỂM TRA CÁC TOPIC CƠ BẢN CỦA TURTLEBOT 4
+=================================================================
+Đang lắng nghe dữ liệu từ mô phỏng Gazebo trong 4 giây...
+
+=================================================================
+   KẾT QUẢ KIỂM TRA (PHẦN 1 - TURTLEBOT 4 SIMULATION)
+=================================================================
+[PASS] /scan
+       + Đã nhận: 29 messages (~7.2 Hz)
+       + Frame ID: 'turtlebot4/rplidar_link/rplidar'
+       + Số tia quét: 640
+       + Khoảng cách quét: 1.34m -> infm
+-----------------------------------------------------------------
+[PASS] /odom
+       + Đã nhận: 16 messages (~4.0 Hz)
+       + Frame ID: 'odom' -> 'base_link'
+       + Tọa độ hiện tại: x=0.000, y=0.000, z=0.000
+-----------------------------------------------------------------
+[PASS] /cmd_vel
+       + Đã khởi tạo publisher cho /cmd_vel
+       + Số node subscriber đang lắng nghe /cmd_vel: 1
+       + Đã gửi thử nghiệm lệnh Twist an toàn thành công.
+=================================================================
+>> TẤT CẢ TOPIC CƠ BẢN HOẠT ĐỘNG HOÀN HẢO! <<
+=================================================================
+
