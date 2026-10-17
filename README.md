@@ -15,7 +15,7 @@ Package ROS 2 Humble cho **TurtleBot 4** trong môi trường mô phỏng **Gaze
 ## 📁 Cấu trúc Thư mục Package
 
 ```
-/home/gdon/ur_ws/src/rua4/
+rua4/
 ├── package.xml                 # Khai báo metadata & dependencies (rclpy, cv_bridge, nav2...)
 ├── setup.py                    # Cấu hình cài đặt Python package & các console_scripts
 ├── setup.cfg
@@ -54,22 +54,26 @@ Package ROS 2 Humble cho **TurtleBot 4** trong môi trường mô phỏng **Gaze
 
 ---
 
-## 🛠️ Bước Chuẩn bị Môi trường & Build
+## 🛠️ Yêu cầu Môi trường & Chuẩn bị Build
 
-Mỗi khi mở một Terminal mới để thực hiện các phần, bạn luôn chạy 2 lệnh chuẩn bị sau:
+### 1. Yêu cầu hệ thống
+- **Hệ điều hành**: Ubuntu 22.04 LTS *(Ghi chú: Nếu máy đang chạy phiên bản Ubuntu/Linux khác, có thể khởi chạy môi trường Ubuntu 22.04 qua Docker/Distrobox trước khi thực hiện các lệnh bên dưới)*.
+- **Middleware**: ROS 2 Humble Hawksbill.
+- **Trình mô phỏng & Điều hướng**: Gazebo Sim (Ignition Fortress), RViz2, `turtlebot4_ignition_bringup`, `slam_toolbox`, `navigation2`, `nav2_simple_commander`.
+- **Thị giác máy tính (Bài thực hành 05)**: `cv_bridge`, `opencv-python`, `ultralytics` (YOLOv8), `numpy<2`.
+
+### 2. Source môi trường & Build Package
+Tại mỗi Terminal mới, di chuyển vào workspace (ví dụ `~/ur_ws`) và nạp môi trường:
 
 ```bash
-# 1. Truy cập vào container ROS 2 Humble (nếu dùng Distrobox)
-distrobox enter ros2-humble
-
-# 2. Di chuyển vào workspace và source môi trường
-cd /home/gdon/ur_ws
+cd ~/ur_ws
 source /opt/ros/humble/setup.bash
 source install/setup.bash
 ```
 
-*(Nếu sửa code trong package `rua4`, bạn build lại bằng lệnh:)*
+*(Khi lần đầu tải về hoặc sau khi chỉnh sửa code trong package `rua4`, thực hiện build lại bằng lệnh:)*
 ```bash
+cd ~/ur_ws
 colcon build --symlink-install --packages-select rua4
 source install/setup.bash
 ```
@@ -83,8 +87,7 @@ source install/setup.bash
 #### Bước 1: Khởi chạy mô phỏng và RViz2
 Mở **Terminal 1**:
 ```bash
-distrobox enter ros2-humble
-cd /home/gdon/ur_ws
+cd ~/ur_ws
 source /opt/ros/humble/setup.bash && source install/setup.bash
 
 ros2 launch rua4 sim.launch.py world:=warehouse
@@ -95,8 +98,7 @@ ros2 launch rua4 sim.launch.py world:=warehouse
 #### Bước 2: Kiểm tra các topic cơ bản
 Mở **Terminal 2**:
 ```bash
-distrobox enter ros2-humble
-cd /home/gdon/ur_ws
+cd ~/ur_ws
 source /opt/ros/humble/setup.bash && source install/setup.bash
 
 # Cách 1: Dùng công cụ kiểm tra tự động tích hợp sẵn trong package rua4
@@ -117,8 +119,7 @@ ros2 topic pub --once /cmd_vel geometry_msgs/msg/Twist "{linear: {x: 0.1, y: 0.0
 #### Bước 1: Khởi chạy SLAM Toolbox
 Mở **Terminal 2**:
 ```bash
-distrobox enter ros2-humble
-cd /home/gdon/ur_ws
+cd ~/ur_ws
 source /opt/ros/humble/setup.bash && source install/setup.bash
 
 ros2 launch rua4 slam.launch.py
@@ -127,8 +128,7 @@ ros2 launch rua4 slam.launch.py
 #### Bước 2: Điều khiển robot quét bản đồ (Teleop)
 Mở **Terminal 3**:
 ```bash
-distrobox enter ros2-humble
-cd /home/gdon/ur_ws
+cd ~/ur_ws
 source /opt/ros/humble/setup.bash && source install/setup.bash
 
 ros2 run teleop_twist_keyboard teleop_twist_keyboard
@@ -137,15 +137,14 @@ ros2 run teleop_twist_keyboard teleop_twist_keyboard
 #### Bước 3: Lưu bản đồ
 Sau khi đã quét khảo sát xong toàn bộ khu vực, mở **Terminal 4**:
 ```bash
-distrobox enter ros2-humble
-cd /home/gdon/ur_ws
+cd ~/ur_ws
 source /opt/ros/humble/setup.bash && source install/setup.bash
 
 # Cách 1: Dùng công cụ lưu bản đồ của package rua4 (tự động lưu vào thư mục maps/)
 ros2 run rua4 save_map
 
 # Cách 2: Lệnh trực tiếp của nav2_map_server
-ros2 run nav2_map_server map_saver_cli -t map -f /home/gdon/ur_ws/src/rua4/maps/map --ros-args -p use_sim_time:=true
+ros2 run nav2_map_server map_saver_cli -t map -f ~/ur_ws/src/rua4/maps/map --ros-args -p use_sim_time:=true
 ```
 
 ---
@@ -156,13 +155,12 @@ ros2 run nav2_map_server map_saver_cli -t map -f /home/gdon/ur_ws/src/rua4/maps/
 * Tắt SLAM và Teleop (`Ctrl + C`) nếu đang chạy, chỉ giữ Terminal 1 chạy `sim.launch.py world:=warehouse`.
 * Mở **Terminal 2**:
 ```bash
-distrobox enter ros2-humble
-cd /home/gdon/ur_ws
+cd ~/ur_ws
 source /opt/ros/humble/setup.bash && source install/setup.bash
 
 ros2 launch rua4 localization.launch.py
 ```
-*(Mặc định nạp file `src/rua4/maps/map.yaml`. Có thể chỉ định file khác: `map:=/home/gdon/ur_ws/src/rua4/maps/warehouse.yaml`)*
+*(Mặc định nạp file `src/rua4/maps/map.yaml`. Có thể chỉ định file khác: `map:=~/ur_ws/src/rua4/maps/warehouse.yaml`)*
 
 #### Bước 2: Định vị vị trí robot trên RViz2
 1. Trên thanh công cụ trên cùng của RViz2, chọn **`2D Pose Estimate`**.
@@ -177,8 +175,7 @@ ros2 launch rua4 localization.launch.py
 
 Mở **Terminal 2**:
 ```bash
-distrobox enter ros2-humble
-cd /home/gdon/ur_ws
+cd ~/ur_ws
 source /opt/ros/humble/setup.bash && source install/setup.bash
 
 ros2 launch rua4 nav2.launch.py
@@ -188,16 +185,9 @@ ros2 launch rua4 nav2.launch.py
 
 ## 🤖 Hướng dẫn Thực hiện Chi tiết BÀI THỰC HÀNH 05 (Localization + Multi-Goal Nav2 + YOLO)
 
-### Bước A – Chuẩn bị môi trường & Cài đặt thư viện
+### Bước A – Cài đặt thư viện phụ thuộc & Build Package
 
-1. **Vào môi trường ROS 2 Humble và source workspace**:
-```bash
-distrobox enter ros2-humble
-cd /home/gdon/ur_ws
-source /opt/ros/humble/setup.bash
-```
-
-2. **Cài đặt các gói phụ thuộc (chỉ cần chạy 1 lần)**:
+1. **Cài đặt các gói phụ thuộc cho Bài 05 (chỉ cần chạy 1 lần)**:
 ```bash
 # Các gói ROS 2 và hệ thống qua apt:
 sudo apt update
@@ -207,22 +197,19 @@ sudo apt install -y ros-humble-cv-bridge ros-humble-nav2-simple-commander python
 pip install "numpy<2" ultralytics
 ```
 
-3. **Xác minh phiên bản và khả năng import thư viện**:
+2. **Xác minh phiên bản và khả năng import thư viện**:
 ```bash
 python3 -c "import rclpy, cv2, yaml, numpy, ultralytics; from cv_bridge import CvBridge; from nav2_simple_commander.robot_navigator import BasicNavigator; print('NumPy:', numpy.__version__, '| OpenCV:', cv2.__version__, '| Ultralytics:', ultralytics.__version__, '-> ALL OK!')"
 ```
 
----
-
-### Bước F – Build Package và Kiểm tra Executables
-
-Thực hiện build package `rua4` và kiểm tra danh sách node đã đăng ký:
+3. **Build package `rua4` và kiểm tra danh sách node đã đăng ký**:
 ```bash
-cd /home/gdon/ur_ws
+cd ~/ur_ws
+source /opt/ros/humble/setup.bash
 colcon build --symlink-install --packages-select rua4
 source install/setup.bash
 
-# Kiểm tra các executable của package rua4 (phải có check_topics, save_map, nav_commander, yolo_detector, undock):
+# Kiểm tra các executable của package rua4 (check_topics, save_map, nav_commander, yolo_detector, undock):
 ros2 pkg executables rua4
 ```
 
@@ -232,8 +219,7 @@ ros2 pkg executables rua4
 
 Mở **Terminal 1** và khởi chạy TurtleBot 4 bản `standard` (có gắn LiDAR và camera RGB-D OAK-D) trong world `warehouse` đúng với bản đồ `maps/map.yaml` đã lưu:
 ```bash
-distrobox enter ros2-humble
-cd /home/gdon/ur_ws
+cd ~/ur_ws
 source /opt/ros/humble/setup.bash && source install/setup.bash
 
 ros2 launch rua4 sim.launch.py world:=warehouse model:=standard
@@ -245,19 +231,17 @@ ros2 launch rua4 sim.launch.py world:=warehouse model:=standard
 
 Mở **Terminal 2** và khởi chạy hệ thống Localization + Nav2 sử dụng bản đồ cũ `maps/map.yaml` (mặc định):
 ```bash
-distrobox enter ros2-humble
-cd /home/gdon/ur_ws
+cd ~/ur_ws
 source /opt/ros/humble/setup.bash && source install/setup.bash
 
-ros2 launch rua4 nav2.launch.py map:=/home/gdon/ur_ws/src/rua4/maps/map.yaml
+ros2 launch rua4 nav2.launch.py
 ```
 *(Lưu ý: Không chạy đồng thời `localization.launch.py` và `nav2.launch.py` vì `nav2.launch.py` đã nạp sẵn `map_server` và `amcl`).*
 
 #### Kiểm tra trạng thái Localization, TF và Camera trước khi chạy tự hành:
 Mở **Terminal 3** và chạy lệnh kiểm tra tổng hợp Bài 05:
 ```bash
-distrobox enter ros2-humble
-cd /home/gdon/ur_ws
+cd ~/ur_ws
 source /opt/ros/humble/setup.bash && source install/setup.bash
 
 # Kiểm tra tự động /scan, /odom, /cmd_vel, /map, /amcl_pose, /tf và /oakd/rgb/preview/image_raw:
@@ -277,8 +261,7 @@ ros2 topic echo /amcl_pose --once
 
 Trong **Terminal 3**, khởi chạy node `yolo_detector`:
 ```bash
-distrobox enter ros2-humble
-cd /home/gdon/ur_ws
+cd ~/ur_ws
 source /opt/ros/humble/setup.bash && source install/setup.bash
 
 ros2 run rua4 yolo_detector
@@ -294,7 +277,7 @@ ros2 run rua4 yolo_detector
 * **Quan sát kết quả**:
   * Cửa sổ **`TurtleBot 4 - YOLO Object Detection (rua4)`** sẽ bật lên hiển thị luồng video trực tiếp từ camera RGB của robot kèm thanh trạng thái FPS, thời gian suy luận (ms) và các khung bounding box + nhãn class + độ tin cậy.
   * Đồng thời trên **RViz2**, khung **YOLO Annotated Image** (subscribe topic `/yolo/annotated_image`) cũng hiển thị trực tiếp hình ảnh đã gắn nhãn.
-  * Ảnh chụp khung hình mới nhất và ảnh phát hiện vật thể được tự động lưu tại `/home/gdon/ur_ws/src/rua4/results/yolo_latest_frame.jpg` và `yolo_latest_detection.jpg` để phục vụ làm báo cáo.
+  * Ảnh chụp khung hình mới nhất và ảnh phát hiện vật thể được tự động lưu tại `src/rua4/results/yolo_latest_frame.jpg` và `yolo_latest_detection.jpg` để phục vụ làm báo cáo.
 
 ---
 
@@ -304,8 +287,7 @@ ros2 run rua4 yolo_detector
 
 Mở **Terminal 4** và chạy node điều hướng tự động `nav_commander`:
 ```bash
-distrobox enter ros2-humble
-cd /home/gdon/ur_ws
+cd ~/ur_ws
 source /opt/ros/humble/setup.bash && source install/setup.bash
 
 # Chạy chuỗi Goal của môi trường warehouse từ file config/lab5_goals.yaml:
@@ -342,7 +324,7 @@ Nếu bạn muốn thay đổi vị trí các Goal trong file `config/lab5_goals
 3. Đọc `position.x`, `position.y` và `orientation.z`, `orientation.w` trên terminal. Góc `yaw` (radian) được tính bởi công thức:
    $$\text{yaw} = 2 \cdot \text{atan2}(z, w)$$
    *(Mẹo nhanh: hướng $+X$ có $\text{yaw} = 0.0$, hướng $+Y$ có $\text{yaw} = 1.57$, hướng $-X$ có $\text{yaw} = 3.14$, hướng $-Y$ có $\text{yaw} = -1.57$).*
-4. Điền tọa độ vào mục `custom` hoặc `warehouse` trong `/home/gdon/ur_ws/src/rua4/config/lab5_goals.yaml`.
+4. Điền tọa độ vào mục `custom` hoặc `warehouse` trong `src/rua4/config/lab5_goals.yaml`.
 
 ---
 
@@ -361,5 +343,5 @@ Nếu bạn muốn thay đổi vị trí các Goal trong file `config/lab5_goals
    - Kiểm tra danh sách topic ảnh đang hoạt động bằng `ros2 topic list | grep image` và truyền vào `--image-topic <tên_topic>`.
 
 3. **Model YOLO chạy nhưng ít phát hiện vật thể trong kho mặc định**:
-   - **Giải thích**: Trọng số pretrained `yolov8n.pt` được huấn luyện trên tập **MS COCO (80 classes)** gồm các đối tượng đời sống (`person`, `chair`, `bench`, `tv`, `bottle`, `cup`, `suitcase`, `potted plant`, `truck`...). Các kệ sắt công nghiệp hoặc tường kho thô không thuộc 80 lớp COCO (và hoàn toàn không có lớp `bình chữa cháy` trong COCO chuẩn).
+   - **Giải thích**: Trọng số pretrained `yolov8n.pt` được huấn luyện trên tập **MS COCO (80 classes)** gồm các đối tượng đời sống (`person`, `chair`, `bench`, `tv`, `bottle`, `cup`, `suitcase`, `potted plant`, `truck`...). Các kệ sắt công nghiệp hoặc tường kho thô không thuộc 80 lớp COCO.
    - **Cách kiểm thử nhận diện trực quan trong Gazebo**: Trong giao diện Gazebo Ignition, bạn có thể mở thẻ **Resource Spawner / Fuel** (hoặc Insert model) để đặt thêm mô hình người (`Standing person`), ghế (`Chair`) hoặc xe nâng/thùng hàng trước mặt đường đi của robot (tại khoảng tọa độ $x \in [1.5, 3.5], y \in [0.0, 2.5]$ ngoài hành lang di chuyển) để YOLO phát hiện với độ tin cậy rất cao ($> 0.80$).
