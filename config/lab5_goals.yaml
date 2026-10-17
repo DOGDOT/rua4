@@ -1,0 +1,107 @@
+# ==============================================================================
+# CẤU HÌNH DANH SÁCH MỤC TIÊU TỰ HÀNH (NAV2 GOALS) - BÀI THỰC HÀNH 05
+# Package: rua4 | Hệ tọa độ tham chiếu: map
+# ==============================================================================
+#
+# HƯỚNG DẪN LẤY TỌA ĐỘ THỰC TẾ TỪ RVIZ2 & TÍNH GÓC YAW:
+# ------------------------------------------------------------------------------
+# Cách 1 (Khuyên dùng - Lấy cả tọa độ x, y và hướng quay yaw từ RViz2):
+#   1. Mở 1 terminal phụ và lắng nghe topic /goal_pose (khi chưa chạy nav_commander):
+#      ros2 topic echo /goal_pose --once
+#   2. Trên thanh công cụ RViz2, chọn "Nav2 Goal" (hoặc "2D Goal Pose"), click và
+#      kéo mũi tên tại điểm muốn lấy trên bản đồ.
+#   3. Đọc giá trị trong terminal:
+#      - position.x, position.y -> điền vào x, y bên dưới.
+#      - orientation.z, orientation.w -> chuyển sang góc yaw (radian) theo công thức:
+#        yaw = 2 * atan2(z, w)
+#      (Các hướng thông dụng: 0.0 rad = hướng +X; 1.57 rad = +90 độ hướng +Y;
+#       3.14 rad = 180 độ hướng -X; -1.57 rad = -90 độ hướng -Y).
+#
+# Cách 2 (Dùng công cụ "Publish Point" trên RViz2):
+#   1. Chạy lệnh: ros2 topic echo /clicked_point --once
+#   2. Chọn công cụ "Publish Point" trên RViz2 và click vào vị trí trên bản đồ
+#      để lấy nhanh tọa độ (x, y).
+#
+# Cách 3 (Lấy vị trí hiện tại của robot từ AMCL):
+#   ros2 topic echo /amcl_pose --once
+# ==============================================================================
+
+frame_id: "map"
+use_sim_time: true
+default_preset: "warehouse"
+goal_timeout_sec: 120.0
+wait_between_goals_sec: 2.0
+stop_on_failure: false
+
+# Tùy chọn tự động gửi Initial Pose (2D Pose Estimate) từ code khi khởi động:
+# Mặc định false vì config/localization.yaml đã bật set_initial_pose: true tại (0, 0, 0)
+set_initial_pose: false
+initial_pose:
+  x: 0.0
+  y: 0.0
+  yaw: 0.0
+
+presets:
+  # ----------------------------------------------------------------------------
+  # Preset 'warehouse': Đã kiểm chứng nằm trong vùng không gian trống (free space,
+  # giá trị pixel = 254, khoảng cách tới vật cản gần nhất > 1.25m) trên cả 2 bản đồ:
+  #   - maps/map.yaml (map.pgm, 604x1005, resolution 0.05m, origin [-15.1, -25.0, 0.0])
+  #   - maps/warehouse.yaml (warehouse.pgm, 1006x1674, resolution 0.03m)
+  # ----------------------------------------------------------------------------
+  warehouse:
+    - name: "Goal 1 - Hành lang kho A"
+      x: 2.0
+      y: 0.0
+      yaw: 0.0
+    - name: "Goal 2 - Gian hàng B"
+      x: 3.5
+      y: 2.0
+      yaw: 1.57
+    - name: "Goal 3 - Điểm trung chuyển"
+      x: 1.0
+      y: 2.5
+      yaw: 3.14
+    - name: "Goal 4 - Trở về vị trí xuất phát"
+      x: 0.0
+      y: 0.0
+      yaw: 0.0
+
+  # ----------------------------------------------------------------------------
+  # Preset 'maze': Đã kiểm chứng nằm trong vùng hành lang trống trên bản đồ
+  # maps/maze.yaml (maze.pgm, 670x669, resolution 0.03m, origin [-10.1, -10.0, 0.0])
+  # ----------------------------------------------------------------------------
+  maze:
+    - name: "Goal 1 - Ngã rẽ thứ nhất"
+      x: 1.5
+      y: 0.0
+      yaw: 0.0
+    - name: "Goal 2 - Hành lang mê cung"
+      x: 1.5
+      y: 1.5
+      yaw: 1.57
+    - name: "Goal 3 - Góc trên mê cung"
+      x: 1.5
+      y: 3.0
+      yaw: 3.14
+    - name: "Goal 4 - Trở về vạch xuất phát"
+      x: 0.0
+      y: 0.0
+      yaw: 0.0
+
+  # ----------------------------------------------------------------------------
+  # Preset 'custom': Danh sách 3 Goal tùy chỉnh (CẦN XÁC NHẬN nếu dùng bản đồ khác)
+  # Chạy: ros2 run rua4 nav_commander --preset custom
+  # ----------------------------------------------------------------------------
+  custom:
+    - name: "Goal 1 - Điểm kiểm tra số 1"
+      x: 2.0
+      y: 0.0
+      yaw: 0.0
+    - name: "Goal 2 - Điểm kiểm tra số 2"
+      x: 3.5
+      y: 2.0
+      yaw: 1.57
+    - name: "Goal 3 - Điểm kiểm tra số 3"
+      x: 1.0
+      y: 2.5
+      yaw: 3.14

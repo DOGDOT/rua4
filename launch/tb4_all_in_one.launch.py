@@ -20,7 +20,7 @@ def generate_launch_description():
         description='Môi trường Gazebo (warehouse, maze, depot)')
     map_arg = DeclareLaunchArgument(
         'map',
-        default_value=PathJoinSubstitution([pkg_rua4, 'maps', 'warehouse.yaml']),
+        default_value=PathJoinSubstitution([pkg_rua4, 'maps', 'map.yaml']),
         description='File map.yaml (dùng cho localization và nav2)')
     rviz_arg = DeclareLaunchArgument(
         'rviz', default_value='true',

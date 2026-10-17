@@ -31,6 +31,7 @@ setup(
             'check_topics = rua4.check_topics:main',
             'save_map = rua4.save_map:main',
             'nav_commander = rua4.nav_commander:main',
+            'yolo_detector = rua4.yolo_detector:main',
             'undock = rua4.undock:main',
         ],
     },

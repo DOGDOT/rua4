@@ -89,7 +89,7 @@ def generate_launch_description():
         description='Môi trường mô phỏng (warehouse, maze, depot)')
     map_arg = DeclareLaunchArgument(
         'map',
-        default_value=PathJoinSubstitution([pkg_rua4, 'maps', 'warehouse.yaml']),
+        default_value=PathJoinSubstitution([pkg_rua4, 'maps', 'map.yaml']),
         description='Đường dẫn tuyệt đối đến file map.yaml cần nạp')
     params_file_arg = DeclareLaunchArgument(
         'params',
