@@ -15,3 +15,11 @@ log/
 .idea/
 *.swp
 *~
+
+# Reports
+*.tex
+*.pdf
+*.aux
+*.log
+*.out
+*.toc

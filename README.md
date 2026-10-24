@@ -280,3 +280,28 @@ source /opt/ros/humble/setup.bash && source install/setup.bash
 ros2 launch rua4 lab5.launch.py preset:=warehouse
 ```
 *(Hoặc chạy tách riêng `ros2 run rua4 yolo_detector` ở Terminal 3 và `ros2 run rua4 nav_commander --preset warehouse` ở Terminal 4).*
+
+---
+
+## 🔧 Xử lý Lỗi Thường Gặp (Troubleshooting)
+
+1. **Lỗi `TypeError: canonicalize_version() got an unexpected keyword argument 'strip_trailing_zero'` khi chạy `colcon build`**:
+   - **Nguyên nhân**: `setuptools` bản mới (`>=70`) vô tình được cài vào thư mục người dùng (`~/.local/lib/python3.10/site-packages`), xung đột với thư viện `packaging` của Ubuntu 22.04.
+   - **Khắc phục**: Gỡ bỏ setuptools trong user space để sử dụng phiên bản hệ thống chuẩn:
+     ```bash
+     pip uninstall -y setuptools
+     colcon build --symlink-install --packages-select rua4
+     ```
+
+2. **Lỗi `AttributeError: _ARRAY_API not found` khi import `cv_bridge`**:
+   - **Khắc phục**: Ghim phiên bản numpy `< 2`:
+     ```bash
+     pip install "numpy<2"
+     ```
+
+3. **Cửa sổ Webcam không mở hoặc lỗi `/dev/video0`**:
+   - Nếu dùng webcam ngoài (USB), kiểm tra danh sách thiết bị bằng `ls -la /dev/video*` và truyền tham số camera:
+     ```bash
+     ros2 run rua4 gesture_recognition_node --camera-id 2
+     ```
+
