@@ -270,21 +270,6 @@ Có thể mở thêm 1 terminal phụ để quan sát dữ liệu thời gian th
 ```bash
 ros2 topic echo /detected_gesture
 ```
-
-**Trình tự thực hiện các cử chỉ trước Webcam trong lúc quay Video Demo (không dùng bàn phím)**:
-1. **Demo hành vi Chào lại (`Wave`)**:
-   - Đưa bàn tay lên vẫy qua lại trái–phải (`Wave`) $\rightarrow$ Màn hình báo `SELECTED: Chao lai (Xoay trai - phai)`.
-   - Giơ ngón cái (`Thumb_Up`) $\rightarrow$ Robot xoay trái–phải 2 nhịp để chào lại rồi tự dừng.
-2. **Demo hành vi Tiến–Lùi 4 lần (`Pointing_Up`)**:
-   - Giơ 1 ngón trỏ (`Pointing_Up`) $\rightarrow$ Màn hình báo `SELECTED: Tien - Lui 4 lan`.
-   - Giơ ngón cái (`Thumb_Up`) $\rightarrow$ Robot tự động thực hiện tiến–lùi đủ 4 chu kỳ liên tiếp.
-3. **Demo hành vi Quỹ đạo tròn (`Victory`) + Dừng khẩn cấp (`Open_Palm`)**:
-   - Giơ 2 ngón tay chữ V (`Victory`) $\rightarrow$ Màn hình báo `SELECTED: Di chuyen quy dao tron`.
-   - Giơ ngón cái (`Thumb_Up`) $\rightarrow$ Robot bắt đầu chạy theo đường tròn bán kính $R = 0.40\,\text{m}$.
-   - Khi robot đang chạy vòng tròn, **xòe bàn tay giữ yên (`Open_Palm`)** $\rightarrow$ Robot **dừng ngay lập tức**!
-4. **Demo hủy hành vi và trở về trạng thái chờ (`Closed_Fist`)**:
-   - Giơ 1 ngón tay (`Pointing_Up`) hoặc 2 ngón tay (`Victory`), sau đó **nắm chặt bàn tay (`Closed_Fist`)** $\rightarrow$ Hệ thống hủy hành vi hiện tại và trở về trạng thái chờ `IDLE`.
-
 ---
 
 ## 🔧 Xử lý Lỗi Thường Gặp (Troubleshooting)
